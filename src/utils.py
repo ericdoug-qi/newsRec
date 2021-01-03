@@ -21,6 +21,7 @@ from __future__ import absolute_import
 # sys packages
 import os
 from datetime import datetime
+import numpy as np
 
 # third packages
 
@@ -54,3 +55,25 @@ def submit(recall_df, topk=5, model_name=None):
     else:
         save_name = os.path.join(SUBMIT_ROOT,   'submit_' + datetime.today().strftime('%m-%d') + '.csv')
     submit.to_csv(save_name, index=False, header=True)
+    
+    
+max_min_scaler = lambda x: (x-np.min(x)) /(np.max(x) - np.min(x))
+
+def norm_sim(sim_df, weight=0.0):
+    """排序结果归一化
+
+    :param sim_df:
+    :param weight:
+    :return:
+    """
+
+    # print(sim_df.head())
+    min_sim = sim_df.min()
+    max_sim = sim_df.max()
+    if max_sim == min_sim:
+        sim_df = sim_df.apply(lambda sim: 1.0)
+    else:
+        sim_df = sim_df.apply(lambda sim: 1.0 * (sim - min_sim) / (max_sim - min_sim))
+
+    sim_df = sim_df.apply(lambda sim: sim + weight)  # plus one
+    return sim_df

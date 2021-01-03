@@ -31,14 +31,17 @@ import pickle
 # my packages
 from datasets import NewDataSet
 from config import MODEL_DATA_ROOT
+from config import DATA_ROOT
 
 
-def itemcf_sim(click_data_file):
+def itemcf_sim(click_df, user_item_click_dict):
+    """物品相似度计算
 
-    news_datasets = NewDataSet(click_data_file)
-    click_df = news_datasets.all_click
-    # 获取用户的点击文章字典
-    user_item_click_dict = news_datasets.get_user_item_time(click_df)
+    :param click_df:
+    :param user_item_click_dict:
+    :return:
+    """
+
 
     # 计算item相似度
     i2i_sim = {}
@@ -103,8 +106,17 @@ def item_based_recomm(user_id, user_item_time_dict, i22_sim, sim_item_topk, reca
     return item_rank
 
 if __name__ == '__main__':
+
+    # datasets
     click_data_file = os.path.join(DATA_ROOT, 'train_click_log.csv')
-    itemcf_sim(click_data_file)
+    news_datasets = NewDataSet(click_data_file)
+
+    # 物品相似度计算
+    i2i_items = itemcf_sim(news_datasets.all_click, news_datasets.user_click_items)
+
+
+
+
 
 
 
