@@ -31,3 +31,5 @@ DATA_ROOT = '/Users/ericdoug/Documents/competitions/tianchi/news/datas'
 
 MODEL_DATA_ROOT = os.path.join(BASE_ROOT, "..", "datas")
 SUBMIT_ROOT = os.path.join(BASE_ROOT, "..", "submits")
+
+METRIC_RECALL = False

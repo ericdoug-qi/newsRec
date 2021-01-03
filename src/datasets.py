@@ -38,7 +38,7 @@ class NewDataSet(object):
         else:
             self._all_click = self.get_all_clicks(data_dir, offline=offline)
 
-        self._user_click_items = self.get_user_item_time(self._all_click)
+        self._user_click_items = self.get_user_item_time()
 
     @property
     def all_click(self):

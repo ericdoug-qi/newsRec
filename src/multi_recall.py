@@ -38,12 +38,12 @@ import tensorflow as tf
 from deepmatch.models import *
 from deepmatch.utils import sampledsoftmaxloss
 
-
 # my packages
 from datasets import NewDataSet
 from config import DATA_ROOT
 from config import MODEL_DATA_ROOT
 from utils import max_min_scaler
+from config import METRIC_RECALL
 
 
 class MultiRecall(object):
@@ -413,7 +413,18 @@ class MultiRecall(object):
         return user_recall_items_dict
 
 
+    def recall(self):
+
+        if not METRIC_RECALL:
+            self._multi_recall_dict['youtubednn_recall'] = self.youtubednn_u2i_dict(self._new_datasets.all_click, topk=20)
+        else:
+            trn_hist_click_df, trn_last_click_df = self._new_datasets.get_hist_and_last_click()
+            self._multi_recall_dict['youtubednn_recall'] = self.youtubednn_u2i_dict(trn_hist_click_df, topk=20)
+            # 召回效果评估
+            self.metrics_recall(self._multi_recall_dict['youtubednn_recall'], trn_last_click_df, topk=20)
 
 
 if __name__ == '__main__':
     multi_recall = MultiRecall(data_dir=DATA_ROOT, samples=1000)
+
+    multi_recall.recall()
